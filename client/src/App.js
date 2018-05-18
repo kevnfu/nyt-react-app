@@ -1,10 +1,30 @@
 import React from "react";
-import SearchForm from "./components/SearchForm"
+import axios from "axios";
+import SearchForm from "./components/SearchForm";
+import ResultsList from "./components/ResultsList";
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchResults: []
+    }
+  }
 
-  handleSubmit(data) {
+  componentDidMount() {
+    // axios.get('/api/articles/')
+    //   .then(res => res.data)
+    //   .then(data => console.log(data));
+  }
 
+  handleSubmit = (data) => {
+    // search results
+    axios.get('/api/articles/search', {
+      params: data
+    })
+    .then(res => res.data)
+    // .then(data => console.log(data));
+    .then(data => this.setState({ searchResults: data }));
   }
 
   render() {
@@ -16,16 +36,24 @@ class App extends React.Component {
           <p className="lead">Search and save articles!</p>
         </div>
 
-        <div class="card">
-          <h4 class="card-header">Search</h4>
-          <div class="card-body">
-            <SearchForm onSubmit={this.handleSubmit} />
+        <div className="card mb-3">
+          <h4 className="card-header">Search</h4>
+          <div className="card-body">
+            <SearchForm onSubmit={ this.handleSubmit } />
+          </div>
+        </div>
+
+        <div className="card">
+          <h4 className="card-header">Results</h4>
+          <div className="card-body">
+
+            <ResultsList data={ this.state.searchResults }/>
           </div>
         </div>
 
       </div>
 
-    );
+    )
   }
 }
 

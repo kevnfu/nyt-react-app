@@ -3,9 +3,10 @@ const router = require('express').Router();
 const axios = require('axios');
 const db = require('../model');
 
-// Simply passes on the query to NYT article search with API KEY
+// Passes on the query to NYT article search with API KEY
 // q="search term"
 // begin_date, end_date = "YYYYMMDD"
+// then cleans up the json
 router.get('/articles/search', (req, res) => {
   axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json`, {
       params: {
@@ -14,11 +15,12 @@ router.get('/articles/search', (req, res) => {
       }
     })
     .then(response => response.data.response.docs)
-    .then(data => res.json(data));
+    .then(articles => articles.map(a => db.Article.fromNYT(a)))
+    .then(articles => res.json(articles));
 });
 
 router.get('/articles', (req, res) => {
-
+  db.Article.find().then(articles => res.json(articles));
 });
 
 router.post('/articles', (req, res) => {
