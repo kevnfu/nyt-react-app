@@ -7,7 +7,6 @@ const ArticleSchema = new mongoose.Schema({
   date: String,
   url: String,
   created_at: { type: Date, required: true, default: Date.now },
-  saved: Boolean,
   notes: String
 });
 
