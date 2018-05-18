@@ -1,7 +1,8 @@
-import React from "react";
-import axios from "axios";
-import SearchForm from "./components/SearchForm";
-import ResultsList from "./components/ResultsList";
+import React from 'react';
+import SearchForm from './components/SearchForm';
+import ResultsList from './components/ResultsList';
+import SavedList from './components/SavedList';
+import API from './utils/API';
 
 class App extends React.Component {
   constructor(props) {
@@ -19,12 +20,8 @@ class App extends React.Component {
 
   handleSubmit = (data) => {
     // search results
-    axios.get('/api/articles/search', {
-      params: data
-    })
-    .then(res => res.data)
-    // .then(data => console.log(data));
-    .then(data => this.setState({ searchResults: data }));
+    API.searchNYT(data)
+      .then(data => this.setState({ searchResults: data }));
   }
 
   render() {
@@ -43,11 +40,19 @@ class App extends React.Component {
           </div>
         </div>
 
-        <div className="card">
+        <div className="card mb-3">
           <h4 className="card-header">Results</h4>
           <div className="card-body">
 
-            <ResultsList data={ this.state.searchResults }/>
+            <ResultsList data={ this.state.searchResults } />
+          </div>
+        </div>
+
+        <div className="card mb-3">
+          <h4 className="card-header">Saved Articles</h4>
+          <div className="card-body">
+
+            <SavedList />
           </div>
         </div>
 
