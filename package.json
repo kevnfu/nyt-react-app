@@ -1,0 +1,27 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "server": "node server.js",
+    "client": "cd client && yarn start",
+    "start": "concurrently \"nodemon\" \"yarn client\"",
+    "build": "cd client && yarn build",
+    "deploy": "yarn build && git push heroku master",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "installDeps": "yarn && cd client && yarn",
+    "heroku-prebuild": "cd client && yarn",
+    "heroku-postbuild": "cd client && yarn && yarn build"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^3.5.0",
+    "nodemon": "^1.11.0"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.15.4",
+    "mongoose": "^5.1.1"
+  }
+}
