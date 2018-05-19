@@ -3,17 +3,19 @@ import PropTypes from 'prop-types';
 
 const ArticleCard = (props) => {
   const {data} = props;
+  const {url, headline, created_at, snippet} = data;
   return (
     <div className="card my-2">
       <div className="card-body">
         <h5 className="card-title">
-          <a href={data.url}>{data.headline}</a>
+          <a href={url}>{headline}</a>
           <button className="btn btn-primary float-right"
             onClick={props.onClick}>
             {props.buttonLabel}
           </button>
         </h5>
-        <p className="card-text">{data.snippet}</p>
+        {created_at && <p className="text-muted">Date saved: {created_at}</p>}
+        <p className="card-text">{snippet}</p>
         {props.children}
       </div>
     </div>
