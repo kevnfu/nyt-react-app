@@ -4,7 +4,6 @@ const router = require('express').Router();
 const axios = require('axios');
 const db = require('../model');
 
-
 module.exports = function(io) {
 
   // Passes on the query to NYT article search with API KEY
@@ -19,8 +18,11 @@ module.exports = function(io) {
         }
       })
       .then(response => response.data.response.docs)
-      .then(articles => articles.map(a => db.Article.fromNYT(a)))
-      .then(articles => res.json(articles));
+      .then(articles => articles.map(a => db.Article.fromNYT(a).toObject()))
+      .then(articles => {
+        articles.forEach(a => delete a.created_at);
+        res.json(articles);
+      });
   });
 
   router.get('/articles', (req, res) => {
