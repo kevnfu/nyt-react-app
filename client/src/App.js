@@ -12,15 +12,9 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    // axios.get('/api/articles/')
-    //   .then(res => res.data)
-    //   .then(data => console.log(data));
-  }
-
-  handleSubmit = (data) => {
+  handleSubmit = (query) => {
     // search results
-    API.searchNYT(data)
+    API.searchNYT(query)
       .then(data => this.setState({ searchResults: data }));
   }
 

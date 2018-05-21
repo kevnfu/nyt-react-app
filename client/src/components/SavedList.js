@@ -10,12 +10,28 @@ class SavedList extends React.Component {
     this.state = {
       savedArticles: []
     }
-    this.updateNotes = debounce(API.updateNotes,3000);
+    // stores index of savedArticles that have notes modified
+    this.updatedIndexes = new Set();
+
+    // debounce syncNotes
+    this.syncNotes = debounce(this.syncNotes, 1000);
+  }
+
+  syncNotes() {
+    const {savedArticles} = this.state
+
+    this.updatedIndexes.forEach(index => {
+      const {_id, notes} = savedArticles[index];
+      API.updateNotes(_id, notes);
+    });
+
+    this.updatedIndexes.clear();
   }
 
   syncWithServer() {
     API.getSavedArticles()
-      .then(data => this.setState({ savedArticles: data }));
+      .then(data => this.setState({ savedArticles: data }))
+      .then(() => this.updatedIndexes.clear());
   }
 
   componentDidMount() {
@@ -26,12 +42,18 @@ class SavedList extends React.Component {
   }
 
   handleClick(article) {
-    debounce(API.removeArticle)
     API.removeArticle(article._id);
   }
 
-  handleChange(event, index, id) {
-    this.updateNotes(id, event.target.value);
+  handleChange(event, index) {
+    // update state
+    const updatedArticles = [...this.state.savedArticles];
+    updatedArticles[index].notes = event.target.value;
+    this.setState({savedArticles: updatedArticles})
+
+    // alert server
+    this.updatedIndexes.add(index);
+    this.syncNotes();
   }
 
   render() {
@@ -42,7 +64,7 @@ class SavedList extends React.Component {
           buttonLabel="Remove" onClick={() => this.handleClick(article)}>
           <textarea className="w-100"
             value={savedArticles[index].notes}
-            onChange={e => this.handleChange(e, index, article._id)} />
+            onChange={e => this.handleChange(e, index)} />
         </ArticleCard>
       );
     });
