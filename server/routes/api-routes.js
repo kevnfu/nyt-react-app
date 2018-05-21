@@ -1,4 +1,4 @@
-const KEY = 'e4fc1d91deb54638883811b44d2981c8';
+const KEY = process.env.NYT_KEY;
 const DB_CHANGE = 'dbChange';
 const router = require('express').Router();
 const axios = require('axios');
